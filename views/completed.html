@@ -1,0 +1,39 @@
+<header class="header" >
+    <h1>todos</h1>
+    <form ng-submit="$root.add(text)"><input class="new-todo" placeholder="接下来做点什么呢?" ng-model="$root.text"  autofocus></form>
+</header>
+<!-- This section should be hidden by default and shown when there are todos -->
+<section class="main">
+    <input class="toggle-all" type="checkbox" ng-click="$root.checkAll()">
+    <label for="toggle-all">Mark all as complete</label>
+    <ul class="todo-list">
+        <li ng-repeat="item in ($root.voList|filter:{'completed':true})" ng-class="{'completed':item.completed,'editing':item.editing}">
+            <div class="view">
+                <input class="toggle" type="checkbox" ng-checked="item.completed" ng-click="$root.reverseCheck(item.id)">
+                <label ng-dblclick="$root.edit($index)">{{item.info}} </label>
+                <button class="destroy" ng-click="$root.delete($index)"></button>
+            </div>
+            <input class="edit" ng-model="item.info" ng-blur="$root.save($index)">
+        </li>
+    </ul>
+</section>
+<!-- This footer should hidden by default and shown when there are todos -->
+<footer class="footer" ng-show="$root.voList.length">
+    <!-- This should be `0 items left` by default -->
+    <span class="todo-count" ng-show="($root.voList|filter:{'completed':false}).length">还有 <strong style="color: red">{{($root.voList|filter:{'completed':false}).length}}</strong> 项 待办</span>
+    <!-- Remove this if you don't implement routing -->
+    <ul class="filters">
+        <li>
+            <a  ui-sref="all" >全部</a>
+        </li>
+        <li>
+            <a  ui-sref="active" >待办</a>
+        </li>
+        <li>
+            <a ng-class="{selected:true}" ui-sref="completed" >已完成</a>
+        </li>
+    </ul>
+    <!-- Hidden if no completed items are left ↓ -->
+    <button class="clear-completed" ng-show="($root.voList|filter:{'completed':true}).length" ng-click="$root.removeSelected()">删除已完成</button>
+</footer>
+
